@@ -54,8 +54,34 @@ describe 'Polls requests', type: :request do
         expect(Poll.count).to eq(polls_before)
         expect(Option.count).to eq(options_before)
       end
+    end
+  end
 
+  describe 'GET /polls/:id' do
+    let(:headers) {{'ACCEPT': 'application/json'}}
+    let(:poll) { create(:poll) }
 
+    subject { get "/polls/#{poll.id}", headers: headers }
+
+    it 'Returns the found poll as json' do
+      subject
+
+      expect(response.content_type).to eq('application/json')
+      expect(response).to have_http_status(200)
+
+      hash = JSON.parse(response.body).with_indifferent_access
+
+      expect(hash[:question]).to eq(poll.question)
+      expect(hash[:options].map { |o| o[:name] }).to contain_exactly(*(poll.options.map(&:name)))
+    end
+
+    it 'Responds with a 404 status if the poll is not found' do
+      allow(PollsService).to receive(:find).and_return(nil)
+
+      subject
+
+      expect(response.content_type).to eq('application/json')
+      expect(response).to have_http_status(404)
     end
   end
 end

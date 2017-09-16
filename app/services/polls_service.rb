@@ -37,4 +37,14 @@ module PollsService
 
     PollsService::Poll.from_record(poll_record)
   end
+
+  # Finds the Poll with the given id.
+  def self.find(id)
+    begin
+      record = ::Poll.find(id)
+      PollsService::Poll.from_record(record)
+    rescue ActiveRecord::RecordNotFound
+      nil
+    end
+  end
 end

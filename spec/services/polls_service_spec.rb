@@ -51,4 +51,24 @@ describe PollsService do
       PollsService.create(params)
     end
   end
+
+  describe '.find' do
+    let(:id) { 1 }
+    let(:record) { build(:poll) }
+
+    it 'Returns the found poll' do
+      allow(Poll).to receive(:find).with(id).and_return(record)
+
+      poll = PollsService.find(id)
+      expect(poll).to be_a PollsService::Poll
+      expect(poll.question).to eq(record.question)
+    end
+
+    it 'Returns nil if no poll is found' do
+      allow(Poll).to receive(:find).with(id).and_raise(ActiveRecord::RecordNotFound)
+
+      poll = PollsService.find(id)
+      expect(poll).to be_nil
+    end
+  end
 end
