@@ -17,11 +17,11 @@ ActiveRecord::Schema.define(version: 20170916015441) do
 
   create_table "options", force: :cascade do |t|
     t.string "name"
-    t.bigint "polls_id", null: false
+    t.bigint "poll_id", null: false
     t.integer "vote_count", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["polls_id"], name: "index_options_on_polls_id"
+    t.index ["poll_id"], name: "index_options_on_poll_id"
   end
 
   create_table "polls", force: :cascade do |t|
@@ -30,5 +30,5 @@ ActiveRecord::Schema.define(version: 20170916015441) do
     t.datetime "updated_at", null: false
   end
 
-  add_foreign_key "options", "polls", column: "polls_id"
+  add_foreign_key "options", "polls"
 end
