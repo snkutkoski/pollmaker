@@ -36,6 +36,7 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.6'
   gem 'factory_girl_rails', '~> 4.7'
   gem 'faker', '~> 1.6', '>= 1.6.6'
+  gem 'awesome_print'
 end
 
 group :development do

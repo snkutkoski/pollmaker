@@ -16,4 +16,9 @@ describe Poll do
     poll.options = [build(:option, poll: poll)]
     expect(poll).not_to be_valid
   end
+
+  it 'Is invalid if two options have the same name' do
+    poll.options = build_list(:option, 2, name: 'Not unique name', poll: poll)
+    expect(poll).not_to be_valid
+  end
 end
