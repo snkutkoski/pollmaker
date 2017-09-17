@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   root to: 'pollmaker#index'
+  get 'poll/:id', to: 'pollmaker#index'
 
   resources :polls, only: [:create, :show]
 

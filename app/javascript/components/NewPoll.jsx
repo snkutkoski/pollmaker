@@ -1,15 +1,25 @@
 import React from 'react'
 import PollForm from './PollForm'
 import axios from 'axios'
+import { withRouter } from 'react-router-dom'
 
-export default class NewPoll extends React.Component {
+class NewPoll extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.submit = this.submit.bind(this)
+  }
+
   static getCompletedOptions (options) {
     return options.filter((option) => (option.name.length > 0))
   }
 
-  static submit ({question, options}) {
+  submit ({question, options}) {
     const completedOptions = NewPoll.getCompletedOptions(options)
     axios.post('/polls', {poll: {question: question, options: completedOptions}})
+      .then(({data}) => {
+        this.props.history.push(`/poll/${data.id}`)
+      })
   }
 
   static validate ({question, options}) {
@@ -28,7 +38,11 @@ export default class NewPoll extends React.Component {
 
   render() {
     return (
-      <PollForm onSubmit={NewPoll.submit} validate={NewPoll.validate} />
+      <PollForm onSubmit={this.submit} validate={NewPoll.validate} />
     )
   }
 }
+
+export default withRouter(({history}) =>
+  <NewPoll history={history} />
+)
