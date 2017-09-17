@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :option do
-    vote_count 0
+    votes []
     name { Faker::Lorem.unique.sentence }
     poll
   end

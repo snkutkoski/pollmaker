@@ -2,10 +2,9 @@ class PollsController < ApplicationController
 
   # POST /polls
   def create
-    poll = PollsService.create(poll_params)
-
     respond_to do |format|
       format.json do
+        poll = PollsService.create(poll_params)
         render json: poll_json(poll), status: poll.valid? ? 201 : 422
       end
     end

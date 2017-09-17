@@ -2,7 +2,7 @@
 class Option < ApplicationRecord
   belongs_to :poll
 
-  validates :name, presence: true, uniqueness: {scope: :poll_id}
+  has_many :votes
 
-  validates :vote_count, presence: true
+  validates :name, presence: true, uniqueness: {scope: :poll_id}
 end

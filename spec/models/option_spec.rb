@@ -7,11 +7,6 @@ describe Option do
     expect(option).to be_valid
   end
 
-  it 'Is invalid without a vote count' do
-    option.vote_count = nil
-    expect(option).not_to be_valid
-  end
-
   it 'Is invalid without a name' do
     option.name = ''
     expect(option).not_to be_valid

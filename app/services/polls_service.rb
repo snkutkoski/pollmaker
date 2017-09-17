@@ -9,7 +9,13 @@ module PollsService
     end
 
     def self.from_record(record)
-      options = record.options.map { |option| OptionsService::Option.from_record(option) }
+      counts = Vote.vote_counts(record.options)
+
+      options = counts.map do |option_id, count|
+        option_record = record.options.find { |o| o.id == option_id }
+        OptionsService::Option.new(option_record.name, count, option_record.id, option_record.errors)
+      end
+
       new(record.question, options, record.id, record.errors.messages)
     end
 

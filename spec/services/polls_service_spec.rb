@@ -35,11 +35,6 @@ describe PollsService do
     end
     let(:params) { {question: question, options: options} }
 
-    before do
-      allow(Poll).to receive(:create).and_return(
-          build(:poll, question: question, options: options.map { |o| Option.new(o) }))
-    end
-
     it 'Returns a PollsService::Poll with the given question and options' do
       poll = PollsService.create(params)
       expect(poll.question).to eq(question)
@@ -47,27 +42,25 @@ describe PollsService do
     end
 
     it 'Saves the Poll' do
-      expect(Poll).to receive(:create)
+      count_before = Poll.count
       PollsService.create(params)
+      expect(Poll.count).to eq(count_before + 1)
     end
   end
 
   describe '.find' do
-    let(:id) { 1 }
-    let(:record) { build(:poll) }
+    let(:record) { create(:poll) }
 
     it 'Returns the found poll' do
-      allow(Poll).to receive(:find).with(id).and_return(record)
-
-      poll = PollsService.find(id)
+      poll = PollsService.find(record.id)
       expect(poll).to be_a PollsService::Poll
       expect(poll.question).to eq(record.question)
     end
 
     it 'Returns nil if no poll is found' do
-      allow(Poll).to receive(:find).with(id).and_raise(ActiveRecord::RecordNotFound)
+      allow(Poll).to receive(:find).and_raise(ActiveRecord::RecordNotFound)
 
-      poll = PollsService.find(id)
+      poll = PollsService.find(record.id)
       expect(poll).to be_nil
     end
   end
