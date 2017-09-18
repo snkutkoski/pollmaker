@@ -10,3 +10,11 @@ test:
   database: pollmaker_test
   pool: 5
 
+production:
+  adapter: postgresql
+  encoding: unicode
+  database: pollmaker_production
+  username: pollmaker
+  password: <%= ENV['POLLMAKER_PASSWORD'] %>
+  pool: 5
+  

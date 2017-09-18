@@ -6,7 +6,7 @@ export default class Results extends React.Component {
   }
 
   render () {
-    const sortedOptions = this.props.options.sort((o1, o2) => o1.vote_count - o2.vote_count)
+    const sortedOptions = this.props.options.sort((o1, o2) => o2.vote_count - o1.vote_count)
 
     const results = sortedOptions.map((option, index) => (
       <tr key={index}>

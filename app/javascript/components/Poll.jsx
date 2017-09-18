@@ -37,9 +37,12 @@ export default class Poll extends React.Component {
         this.setState({poll: buildPoll(data)})
       })
 
-    this.cable = ActionCable.createConsumer('ws://localhost:3000/cable');
+    const host = window.location.hostname
+    const port = window.location.port
+    const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws'
+    this.cable = ActionCable.createConsumer(`${protocol}://${host}:${port}/cable`);
 
-    this.operations = this.cable.subscriptions.create(
+    this.cable.subscriptions.create(
       {channel: 'PollChannel', id: this.props.match.params.id},
       {received: this.handleVoteReceived}
     )
