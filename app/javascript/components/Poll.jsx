@@ -3,6 +3,7 @@ import axios from 'axios'
 import VoteForm from './VoteForm'
 import Results from './Results'
 import ActionCable from 'actioncable'
+import { withCookies } from 'react-cookie'
 
 const buildPoll = (data) => {
   const options = data.options.map((option) => {
@@ -16,7 +17,7 @@ const buildPoll = (data) => {
   }
 }
 
-export default class Poll extends React.Component {
+class Poll extends React.Component {
   constructor (props) {
     super(props)
 
@@ -34,7 +35,10 @@ export default class Poll extends React.Component {
   componentDidMount () {
     axios.get(`/polls/${this.props.match.params.id}`)
       .then(({data}) => {
-        this.setState({poll: buildPoll(data)})
+        const votedPolls = this.getVotedPolls(this.props.cookies)
+        const hasVoted = !!(votedPolls.find((poll_id) => (poll_id === data.id)))
+
+        this.setState({poll: buildPoll(data), hasVoted: hasVoted})
       })
 
     const host = window.location.hostname
@@ -56,6 +60,17 @@ export default class Poll extends React.Component {
     // Set hasVoted before the http request so that users cannot submit twice
     this.setState({hasVoted: true})
     axios.post(`/options/${this.state.selectedOption}/vote`)
+      .then(() => {
+        const cookies = this.props.cookies
+        const votedPolls = this.getVotedPolls(cookies)
+        votedPolls.push(this.state.poll.id)
+        cookies.set('voted_polls', votedPolls, {path: '/'})
+      })
+  }
+
+  getVotedPolls(cookies) {
+    let votedPolls = cookies.get('voted_polls')
+    return Array.isArray(votedPolls) ? votedPolls : []
   }
 
   render () {
@@ -84,3 +99,5 @@ export default class Poll extends React.Component {
     }
   }
 }
+
+export default withCookies(Poll)
