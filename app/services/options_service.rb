@@ -15,7 +15,13 @@ module OptionsService
 
   # Casts a vote for the option with the given id.
   def self.vote(option_id)
-    vote = Vote.new(option_id: option_id)
+    option = ::Option.find(option_id)
+    vote = Vote.new(option: option)
     vote.save
+    poll = PollsService.find(option.poll_id)
+    ActionCable.server.broadcast(
+      "poll_#{option.poll_id}",
+      poll: poll.as_json(include: :options))
+    poll
   end
 end

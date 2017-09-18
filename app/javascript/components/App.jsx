@@ -3,8 +3,9 @@ import NewPoll from './NewPoll'
 import Poll from './Poll'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
-const App = () => (
+const App = (props) => (
   <div className="container">
+    <h2>Pollmaker</h2>
     <Router>
       <Switch>
         <Route path="/poll/:id" component={Poll} />
